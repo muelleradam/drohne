@@ -1,14 +1,19 @@
+#
+# Read and decode is a python-written copy of the cpp code by MxFxM https://github.com/MxFxM/Teensy_SBUS_Controller.
+#
+# This code reads sbus as UART input (here coming from a rc-receiver) and decodes it.
+# Will be expanded to either directly pipe the input (in this case to a flight-controller) over UART, or
+# manipulate the values before piping them.
+#
+
 import serial
 
-#try:
 ser = serial.Serial(
         port='/dev/ttyAMA0', #Replace ttyS0 with ttyAM0 for Pi1,Pi2,Pi0 or ttyS0 if not using RPI 3B
         baudrate = 100000,
         parity=serial.PARITY_EVEN,
         stopbits=serial.STOPBITS_TWO,
         bytesize=serial.EIGHTBITS
-#        bytesize=serial.EIGHTBITS,
-#        timeout=1
 )
 
 serial_buffer = [0] * 30
@@ -64,9 +69,3 @@ while True:
             else:
                 # not the start byte
                 serial_buffer_index = 0
-#except Exception as e:
-#    print(e)
-#
-#finally:
-#    ser = serial.Serial(port='/dev/ttyS0', baudrate = 9600)
-#    ser.close()
