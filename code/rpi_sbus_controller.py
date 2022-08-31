@@ -32,7 +32,7 @@ while True:
     if new_bytes > 0:
         for count in range(new_bytes):
             serial_buffer[serial_buffer_index] = int.from_bytes(ser.read(), "little")
-            ser.write(serial_buffer[serial_buffer_index].to_bytes(1, "little"))
+            #ser.write(serial_buffer[serial_buffer_index].to_bytes(1, "little"))
             serial_buffer_index += 1
 
             if serial_buffer[0] == 0x0F:                    # header byte
@@ -63,6 +63,46 @@ while True:
                         ch18 = channels[16] & 0x02
                         ch17 = channels[16] & 0x01
                         print(channels)
+
+                        # do stuff with channel values
+                        channels[1] = 2000 - channels[1]
+                        channels[3] = channels[3] + 200
+                        print(channels)
+                        print()
+                        
+                        # write out new channel values to flight controller
+                        temp_bitlist = [0 for _ in range(200)]
+                        for c, channel in enumerate(channels):
+                            channel_limited = channel & 0x07FF
+                            for n in range(11):             # retrieve a single bit to add to list
+                                shifted_channel = channel_limited >> n
+                                bit = shifted_channel & 0x0001
+                                temp_bitlist[(c * 11) + n] = bit
+                        
+                        output_data = []
+                        output_data.append(0x0F) # header
+
+                        for bytenr in range(23):
+                            this_byte = (
+                                (temp_bitlist[bytenr * 8 + 0] << 0) +
+                                (temp_bitlist[bytenr * 8 + 1] << 1) +
+                                (temp_bitlist[bytenr * 8 + 2] << 2) +
+                                (temp_bitlist[bytenr * 8 + 3] << 3) +
+                                (temp_bitlist[bytenr * 8 + 4] << 4) +
+                                (temp_bitlist[bytenr * 8 + 5] << 5) +
+                                (temp_bitlist[bytenr * 8 + 6] << 6) +
+                                (temp_bitlist[bytenr * 8 + 7] << 7)
+                            )
+                            output_data.append(this_byte)
+
+                        output_data.append(0x00) # footer
+
+                        print(len(output_data), output_data)
+
+                        # convert to bytes
+                        output_data = [b.to_bytes(1, "little") for b in output_data]
+                        for b in output_data:
+                            ser.write(b)
 
                     # frame is done
                     serial_buffer_index = 0
