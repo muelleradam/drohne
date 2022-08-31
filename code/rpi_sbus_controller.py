@@ -32,6 +32,7 @@ while True:
     if new_bytes > 0:
         for count in range(new_bytes):
             serial_buffer[serial_buffer_index] = int.from_bytes(ser.read(), "little")
+            ser.write(serial_buffer[serial_buffer_index].to_bytes(1, "little"))
             serial_buffer_index += 1
 
             if serial_buffer[0] == 0x0F:                    # header byte
