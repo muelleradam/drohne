@@ -64,8 +64,8 @@ while True:
                         ch17 = channels[16] & 0x01
 
                         # do stuff with channel values
-                        channels[1] = 2000 - channels[1]
-                        channels[3] = channels[3] + 200
+                        #channels[1] = 2000 - channels[1]
+                        #channels[3] = channels[3] + 200
                         
                         # write out new channel values to flight controller
                         temp_bitlist = [0 for _ in range(200)]
