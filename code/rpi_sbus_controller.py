@@ -62,13 +62,10 @@ while True:
                         frame_lost = channels[16] & 0x04
                         ch18 = channels[16] & 0x02
                         ch17 = channels[16] & 0x01
-                        print(channels)
 
                         # do stuff with channel values
                         channels[1] = 2000 - channels[1]
                         channels[3] = channels[3] + 200
-                        print(channels)
-                        print()
                         
                         # write out new channel values to flight controller
                         temp_bitlist = [0 for _ in range(200)]
