@@ -94,8 +94,6 @@ while True:
 
                         output_data.append(0x00) # footer
 
-                        print(len(output_data), output_data)
-
                         # convert to bytes
                         output_data = [b.to_bytes(1, "little") for b in output_data]
                         for b in output_data:
