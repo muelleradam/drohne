@@ -5,6 +5,9 @@
 # Will be expanded to either directly pipe the input (in this case to a flight-controller) over UART, or
 # manipulate the values before piping them.
 #
+# Author: Adam Müller
+# V: 1.0.0
+#
 
 import serial
 
